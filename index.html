@@ -1,242 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendario · RandomCord</title>
-  <style>
-    /* ===== Base ===== */
-    :root{
-      --bg:#0f172a;      /* slate-900 */
-      --panel:#111827;   /* gray-900  */
-      --card:#1e293b;    /* slate-800 */
-      --muted:#94a3b8;   /* slate-400 */
-      --brand:#c084fc;   /* purple-400 */
-      --shadow:0 10px 30px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:#e5e7eb;
-      font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendario · RandomCord</title>
+    <style>
+      /* ==== RESET ==== */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    /* ===== Navbar ===== */
-    .navbar{
-      position:sticky; top:0; z-index:50;
-      background:var(--panel); box-shadow:0 2px 8px rgba(0,0,0,.3);
-    }
-    .nav-inner{
-      max-width:1100px; margin:0 auto; padding:1rem;
-      display:flex; align-items:center; justify-content:space-between;
-    }
-    .logo{font-weight:800; color:var(--brand); font-size:1.25rem}
-    .links{display:flex; gap:1.25rem}
-    .link{
-      color:#fff; text-decoration:none; padding:.25rem .25rem; border-radius:.25rem;
-      transition:color .15s ease;
-    }
-    .link:hover{color:var(--brand)}
-    .link.active{color:var(--brand); font-weight:600}
+      body {
+        font-family: "Poppins", system-ui, sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    /* Hamburger */
-    .hamb{display:none; width:40px; height:40px; border:0; border-radius:.6rem;
-      background:#0b1222; color:#fff; cursor:pointer}
-    .hamb:focus{outline:2px solid var(--brand); outline-offset:2px}
+      /* ==== NAVBAR ==== */
+      nav {
+        background-color: #111827;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
 
-    /* Drawer */
-    .drawer{
-      position:absolute; right:1rem; top:64px; width:220px; padding:.5rem;
-      background:#0b1222; border-radius:.75rem; box-shadow:var(--shadow); display:none;
-    }
-    .drawer.open{display:block}
-    .drawer a{
-      display:block; color:#fff; text-decoration:none; padding:.75rem .875rem; border-radius:.5rem;
-    }
-    .drawer a:hover{background:#111827}
+      nav h1 {
+        color: #c084fc;
+        font-weight: 700;
+        font-size: 1.3rem;
+      }
 
-    /* ===== Main / Card ===== */
-    .container{max-width:1100px; margin:2rem auto; padding:0 1rem}
-    .card{background:var(--card); border-radius:14px; padding:1.25rem; box-shadow:var(--shadow)}
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+      }
 
-    h1{font-size:2rem; font-weight:800; color:var(--brand); text-align:center; margin:0 0 1.25rem}
+      nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.2s;
+        font-weight: 500;
+      }
 
-    /* ===== Table ===== */
-    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px}
-    thead th{
-      background:#5b21b6; color:#fff; padding:.75rem; text-align:center;
-    }
-    td{padding:.9rem .5rem; text-align:center; font-weight:700; color:#fff}
+      nav ul li a:hover {
+        color: #c084fc;
+      }
 
-    /* Asignaturas (colores) */
-    .opt{background:#06b6d4}     /* cyan-500  */
-    .aso{background:#f87171}     /* red-400   */
-    .bd{background:#a855f7}      /* violet-500*/
-    .ipeii{background:#f97316}   /* orange-500*/
-    .serei{background:#eab308}   /* amber-500 */
-    .seg{background:#22c55e}     /* green-500 */
-    .iap{background:#ec4899}     /* pink-500  */
-    .pi{background:#3b82f6}      /* blue-500  */
-    .ingles{background:#6366f1}  /* indigo-500*/
-    .recreo{background:#374151}  /* gray-700  */
+      /* ==== MAIN ==== */
+      main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 2rem;
+      }
 
-    /* ===== Info & actions ===== */
-    .info{background:var(--panel); border-radius:.75rem; padding:1rem; margin-top:1rem}
-    .actions{display:flex; gap:.5rem; flex-wrap:wrap; margin:1rem 0}
-    .btn{
-      background:#0b1222; color:#fff; border:1px solid #1f2937;
-      border-radius:.6rem; padding:.55rem .8rem; cursor:pointer;
-    }
-    .btn:hover{border-color:#374151}
-    .muted{color:var(--muted)}
+      .container {
+        max-width: 1100px;
+        width: 100%;
+      }
 
-    /* ===== Responsive ===== */
-    @media (max-width: 860px){
-      .links{display:none}
-      .hamb{display:inline-grid; place-items:center}
-    }
-  </style>
-</head>
-<body>
-  <!-- NAVBAR -->
-  <header class="navbar" role="banner">
-    <div class="nav-inner">
-      <div class="logo">RandomCord</div>
+      h2 {
+        text-align: center;
+        color: #c084fc;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+      }
 
-      <nav class="links" aria-label="Navegación principal">
-        <a class="link" role="menuitem" href="https://randomcord.es/#/">Inicio</a>
-      </nav>
+      /* ==== TABLA ==== */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      }
 
-      <button class="hamb" id="hamb" aria-label="Abrir menú" aria-haspopup="true" aria-expanded="false">≡</button>
+      thead th {
+        background-color: #5b21b6;
+        color: white;
+        padding: 0.9rem;
+        text-align: center;
+        font-weight: 600;
+      }
 
-      <div class="drawer" id="drawer" role="menu" aria-label="Menú">
-        <a class="link" role="menuitem" href="https://randomcord.es/#/">Inicio</a>
-        <a class="link" role="menuitem" href="https://randomcord.es/#/comunidad">Comunidad</a>
-        <a class="link" role="menuitem" href="https://randomcord.es/#/contacto">Contacto</a>
-        <a class="link" role="menuitem" href="#sobre-nosotros">Sobre nosotros</a>
-        <a class="link" role="menuitem" href="https://randomcord.es/#/sobre-nosotros">Calendario</a>
-      </div>
-    </div>
-  </header>
+      td {
+        padding: 1rem;
+        text-align: center;
+        color: #fff;
+        font-weight: 700;
+      }
 
-  <!-- MAIN -->
-  <main class="container" id="calendario">
-    <h1>Horario Semanal</h1>
+      /* ==== COLORES DE ASIGNATURAS ==== */
+      .opt {
+        background-color: #06b6d4;
+      }
 
-    <div class="card">
-      <div id="tablaWrap"></div>
-      <div class="info">
-        <p><strong>Info</strong></p>
-        <p>Tutor: Javier</p>
-        <p>Coordinación dual: Javier</p>
-      </div>
-    </div>
-  </main>
+      .aso {
+        background-color: #f87171;
+      }
 
-  <script>
-    /* =========================
-       DATOS (edítalos aquí)
-       ========================= */
-    const dataHorario = {
-      lunes:    ["OPT","OPT","OPT","Recreo","SEG","SEG","SEG"],
-      martes:   ["ASO","ASO","INGLÉS","Recreo","INGLÉS","IAP","IAP"],
-      miercoles:["BD","BD","SEREI","Recreo","SEREI","SEREI","PI"],
-      jueves:   ["IPEII","IPEII","IPEII","Recreo","PI","IAP","IAP"],
-      viernes:  ["ASO","ASO","ASO","Recreo","BD","SEREI","SEREI"],
-    };
+      .bd {
+        background-color: #a855f7;
+      }
 
-    // Mapeo asignatura -> clase de color
-    const colorCls = {
-      "OPT":"opt", "ASO":"aso", "BD":"bd", "IPEII":"ipeii",
-      "SEREI":"serei", "SEG":"seg", "IAP":"iap", "PI":"pi",
-      "INGLÉS":"ingles", "Recreo":"recreo"
-    };
+      .ipeii {
+        background-color: #f97316;
+      }
 
-    /* =========================
-       RENDER CALENDARIO
-       ========================= */
-    function renderTabla(datos){
-      const dias = ["lunes","martes","miercoles","jueves","viernes"];
-      // Determinar nº de filas por la lista más larga
-      const filas = Math.max(...dias.map(d=>datos[d].length));
+      .serei {
+        background-color: #eab308;
+      }
 
-      let html = '<table><thead><tr>';
-      html += '<th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th>';
-      html += '</tr></thead><tbody>';
+      .seg {
+        background-color: #22c55e;
+      }
 
-      for(let i=0;i<filas;i++){
-        html += '<tr>';
-        for(const d of dias){
-          const celda = (datos[d] && datos[d][i]) ? datos[d][i] : "";
-          const cls = colorCls[celda] || "";
-          html += `<td class="${cls}">${celda}</td>`;
+      .iap {
+        background-color: #ec4899;
+      }
+
+      .pi {
+        background-color: #3b82f6;
+      }
+
+      .ingles {
+        background-color: #6366f1;
+      }
+
+      .recreo {
+        background-color: #374151;
+      }
+
+      /* ==== INFO ==== */
+      .info {
+        background-color: #111827;
+        margin-top: 2rem;
+        padding: 1.2rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+      }
+
+      .info strong {
+        color: #c084fc;
+      }
+
+      /* ==== FOOTER ==== */
+      footer {
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        background-color: #0b1222;
+      }
+
+      @media (max-width: 768px) {
+        table {
+          font-size: 0.9rem;
         }
-        html += '</tr>';
+        nav ul {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
       }
-      html += '</tbody></table>';
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav>
+      <h1>RandomCord</h1>
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Comunidad</a></li>
+        <li><a href="#">Contacto</a></li>
+        <li><a href="#">Sobre nosotros</a></li>
+        <li><a href="https://cesur.randomcord.es/">Calendario</a></li>
+      </ul>
+    </nav>
 
-      document.getElementById('tablaWrap').innerHTML = html;
-    }
-    renderTabla(dataHorario);
+    <!-- MAIN -->
+    <main>
+      <div class="container">
+        <h2>Horario Semanal</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Lunes</th>
+              <th>Martes</th>
+              <th>Miércoles</th>
+              <th>Jueves</th>
+              <th>Viernes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="opt">OPT</td>
+              <td class="aso">ASO</td>
+              <td class="bd">BD</td>
+              <td class="ipeii">IPEII</td>
+              <td class="aso">ASO</td>
+            </tr>
+            <tr>
+              <td class="opt">OPT</td>
+              <td class="aso">ASO</td>
+              <td class="bd">BD</td>
+              <td class="ipeii">IPEII</td>
+              <td class="aso">ASO</td>
+            </tr>
+            <tr>
+              <td class="opt">OPT</td>
+              <td class="ingles">INGLÉS</td>
+              <td class="serei">SEREI</td>
+              <td class="ipeii">IPEII</td>
+              <td class="aso">ASO</td>
+            </tr>
+            <tr>
+              <td class="recreo">Recreo</td>
+              <td class="recreo">Recreo</td>
+              <td class="recreo">Recreo</td>
+              <td class="recreo">Recreo</td>
+              <td class="recreo">Recreo</td>
+            </tr>
+            <tr>
+              <td class="seg">SEG</td>
+              <td class="ingles">INGLÉS</td>
+              <td class="serei">SEREI</td>
+              <td class="pi">PI</td>
+              <td class="bd">BD</td>
+            </tr>
+            <tr>
+              <td class="seg">SEG</td>
+              <td class="iap">IAP</td>
+              <td class="serei">SEREI</td>
+              <td class="iap">IAP</td>
+              <td class="serei">SEREI</td>
+            </tr>
+            <tr>
+              <td class="seg">SEG</td>
+              <td class="iap">IAP</td>
+              <td class="pi">PI</td>
+              <td class="iap">IAP</td>
+              <td class="serei">SEREI</td>
+            </tr>
+          </tbody>
+        </table>
 
-    /* =========================
-       NAVBAR: activo por hash
-       ========================= */
-    function syncActiveLinks(){
-      const hash = location.hash || "#calendario";
-      for(const a of document.querySelectorAll('.link')) {
-        if(a.getAttribute('href') === hash) a.classList.add('active');
-        else a.classList.remove('active');
-      }
-    }
-    window.addEventListener('hashchange', syncActiveLinks);
-    syncActiveLinks();
+        <div class="info">
+          <p><strong>Info</strong></p>
+          <p>Tutor: Javier</p>
+          <p>Coordinación dual: Javier</p>
+        </div>
+      </div>
+    </main>
 
-    /* =========================
-       MENÚ HAMBURGUESA (drawer)
-       ========================= */
-    const hamb = document.getElementById('hamb');
-    const drawer = document.getElementById('drawer');
-
-    function closeDrawer(){
-      drawer.classList.remove('open');
-      hamb.setAttribute('aria-expanded','false');
-    }
-    function openDrawer(){
-      drawer.classList.add('open');
-      hamb.setAttribute('aria-expanded','true');
-    }
-
-    hamb.addEventListener('click', ()=>{
-      drawer.classList.contains('open') ? closeDrawer() : openDrawer();
-    });
-
-    // Cerrar al hacer click fuera
-    document.addEventListener('click', (e)=>{
-      if(!drawer.contains(e.target) && !hamb.contains(e.target)) closeDrawer();
-    });
-
-    // Cerrar con ESC
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape') closeDrawer();
-    });
-
-    // Cerrar al navegar en el drawer
-    drawer.querySelectorAll('a').forEach(a=>{
-      a.addEventListener('click', closeDrawer);
-    });
-
-    /* =========================
-       ACCIONES: imprimir / exportar
-       ========================= */
-    document.getElementById('btnPrint').addEventListener('click', ()=>window.print());
-    document.getElementById('btnExport').addEventListener('click', ()=>{
-      const blob = new Blob([JSON.stringify(dataHorario, null, 2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'horario.json'; a.click();
-      URL.revokeObjectURL(url);
-    });
-  </script>
-</body>
+    <footer>
+      © 2025 RandomCord — Calendario semanal
+    </footer>
+  </body>
 </html>
